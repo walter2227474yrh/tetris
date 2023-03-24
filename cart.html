@@ -1,0 +1,156 @@
+
+<title>The CowCave</title>
+    <head>
+        <title>
+            Website Layout
+        </title>
+        <style>
+            * {
+                box-sizing: border-box;
+            }
+             
+            /* CSS property for header section */
+            .header {
+                background-color: green;
+                padding: 15px;
+                text-align: center;
+            }
+             
+            /* CSS property for navigation menu */
+            .nav_menu {
+                overflow: hidden;
+                background-color: #333;
+            }
+            .nav_menu a {
+                float: left;
+                display: block;
+                color: white;
+                text-align: center;
+                padding: 14px 16px;
+                text-decoration: none;
+            }
+            .nav_menu a:hover {
+                background-color: white;
+                color: green;
+            }
+             
+            /* CSS property for content section */
+            .columnA, .columnB, .columnC {
+                float: left;
+                width: 31%;
+                padding: 15px;
+                text-align:justify;
+            }
+            h2 {
+                color:green;
+                text-align:center;
+            }
+             
+            /* Media query to set website layout
+            according to screen size */
+            @media screen and (max-width:600px) {
+                .columnA, .columnB, .columnC {
+                    width: 50%;
+                }
+            }
+            @media screen and (max-width:400px) {
+                .columnA, .columnB, .columnC {
+                    width: 100%;
+                }
+            }
+        </style>
+    </head>
+     
+    <body>
+         
+        <!-- header of website layout -->
+        <div class = "header">
+            <h2 style = "color:white;font-size:200%">
+                The CowCave
+            </h2>
+        </div>
+         
+        <!-- navigation menu of website layout -->
+        <div class = "nav_menu">
+            <a href = "file:///H:/html/page4.html">menu</a>
+            <a href = "file:///H:/html/cart.html">cart</a>
+            <a href = "file:///H:/html/page5.html">reward</a>
+        <a href = "file:///H:/html/page3.html">contact us</a>
+         <a href = "file:///H:/html/page2.html">arcade</a>
+        <a href = "file:///H:/html/l.html">arcade2</a>
+        <a href = "https://www.fda.gov/">nutrition</a>
+        
+</div>
+<div class="shopping-cart">
+
+  <div class="column-labels">
+    <label class="product-image">Image</label>
+    <label class="product-details">Product</label>
+    <label class="product-price">Price</label>
+    <label class="product-quantity">Quantity</label>
+    <label class="product-removal">Remove</label>
+    <label class="product-line-price">Total</label>
+  </div>
+<h1>Shopping Cart</h1>
+  <div class="product">
+    <div class="product-image">
+      <img src="dog.jpg">
+    </div>
+    <div class="product-details">
+      <div class="product-title">Dingo Dog </div>
+      <p class="product-description">The best dog of all time.  You will be begging for these things! I got curious once and ate one myself. I'm a fan.</p>
+    </div>
+    <div class="product-price">12.99</div>
+    <div class="product-quantity">
+      <input type="number" value="2" min="1">
+    </div>
+    <div class="product-removal">
+      <button class="remove-product">
+        Remove
+      </button>
+    </div>
+    <div class="product-line-price">25.98</div>
+  </div>
+
+  <div class="product">
+    <div class="product-image">
+      <img src="yummy.jpg" width=200 height=200>
+    </div>
+    <div class="product-details">
+      <div class="product-title">yummy™ we will pay you</div>
+      <p class="product-description">yummy</p>
+    </div>
+    <div class="product-price">45.99</div>
+    <div class="product-quantity">
+      <input type="number" value="1" min="1">
+    </div>
+    <div class="product-removal">
+      <button class="remove-product">
+        Remove
+      </button>
+    </div>
+    <div class="product-line-price">45.99</div>
+  </div>
+
+  <div class="totals">
+    <div class="totals-item">
+      <label>Subtotal</label>
+      <div class="totals-value" id="cart-subtotal">71.97</div>
+    </div>
+    <div class="totals-item">
+      <label>Tax (5%)</label>
+      <div class="totals-value" id="cart-tax">3.60</div>
+    </div>
+    <div class="totals-item">
+      <label>Shipping</label>
+      <div class="totals-value" id="cart-shipping">15.00</div>
+    </div>
+    <div class="totals-item totals-item-total">
+      <label>Grand Total</label>
+      <div class="totals-value" id="cart-total">90.57</div>
+    </div>
+  </div>
+     
+      <button class="checkout">Checkout</button>
+
+</div>

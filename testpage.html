@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+  // Draw the snake
+    function drawSnake() {
+        // Loop over every snake segment
+        for (var i=0; i<snake.segments.length; i++) {
+            var segment = snake.segments[i];
+            var segx = segment.x;
+            var segy = segment.y;
+            var tilex = segx*level.tilewidth;
+            var tiley = segy*level.tileheight;
+ 
+            // Sprite column and row that gets calculated
+            var tx = 0;
+            var ty = 0;
+ 
+            if (i == 0) {
+                // Head; Determine the correct image
+                var nseg = snake.segments[i+1]; // Next segment
+                if (segy < nseg.y) {
+                    // Up
+                    tx = 3; ty = 0;
+                } else if (segx > nseg.x) {
+                    // Right
+                    tx = 4; ty = 0;
+                } else if (segy > nseg.y) {
+                    // Down
+                    tx = 4; ty = 1;
+                } else if (segx < nseg.x) {
+                    // Left
+                    tx = 3; ty = 1;
+                }
+            } else if (i == snake.segments.length-1) {
+                // Tail; Determine the correct image
+                var pseg = snake.segments[i-1]; // Prev segment
+                if (pseg.y < segy) {
+                    // Up
+                    tx = 3; ty = 2;
+                } else if (pseg.x > segx) {
+                    // Right
+                    tx = 4; ty = 2;
+                } else if (pseg.y > segy) {
+                    // Down
+                    tx = 4; ty = 3;
+                } else if (pseg.x < segx) {
+                    // Left
+                    tx = 3; ty = 3;
+                }
+            } else {
+                // Body; Determine the correct image
+                var pseg = snake.segments[i-1]; // Previous segment
+                var nseg = snake.segments[i+1]; // Next segment
+                if (pseg.x < segx && nseg.x > segx || nseg.x < segx && pseg.x > segx) {
+                    // Horizontal Left-Right
+                    tx = 1; ty = 0;
+                } else if (pseg.x < segx && nseg.y > segy || nseg.x < segx && pseg.y > segy) {
+                    // Angle Left-Down
+                    tx = 2; ty = 0;
+                } else if (pseg.y < segy && nseg.y > segy || nseg.y < segy && pseg.y > segy) {
+                    // Vertical Up-Down
+                    tx = 2; ty = 1;
+                } else if (pseg.y < segy && nseg.x < segx || nseg.y < segy && pseg.x < segx) {
+                    // Angle Top-Left
+                    tx = 2; ty = 2;
+                } else if (pseg.x > segx && nseg.y < segy || nseg.x > segx && pseg.y < segy) {
+                    // Angle Right-Up
+                    tx = 0; ty = 1;
+                } else if (pseg.y > segy && nseg.x > segx || nseg.y > segy && pseg.x > segx) {
+                    // Angle Down-Right
+                    tx = 0; ty = 0;
+                }
+            }
+ 
+            // Draw the image of the snake part
+            context.drawImage(tileimage, tx*64, ty*64, 64, 64, tilex, tiley,
+                              level.tilewidth, level.tileheight);
+        }
+    }
+
+
+  // Create objects
+    var snake = new Snake();
+    var level = new Level(20, 15, 32, 32);
+ 
+    // Variables
+    var score = 0;              // Score
+    var gameover = true;        // Game is over
+    var gameovertime = 1;       // How long we have been game over
+    var gameoverdelay = 0.5;    // Waiting time after game over
+ 
+    // (...)
+ 
+    function newGame() {
+        // Initialize the snake
+        snake.init(10, 10, 1, 10, 4);
+ 
+        // Generate the default level
+        level.generate();
+ 
+        // Add an apple
+        addApple();
+ 
+        // Initialize the score
+        score = 0;
+ 
+        // Initialize variables
+        gameover = false;
+    }
+
+   // Add an apple to the level at an empty position
+    function addApple() {
+        // Loop until we have a valid apple
+        var valid = false;
+        while (!valid) {
+            // Get a random position
+            var ax = randRange(0, level.columns-1);
+            var ay = randRange(0, level.rows-1);
+ 
+            // Make sure the snake doesn't overlap the new apple
+            var overlap = false;
+            for (var i=0; i<snake.segments.length; i++) {
+                // Get the position of the current snake segment
+                var sx = snake.segments[i].x;
+                var sy = snake.segments[i].y;
+ 
+                // Check overlap
+                if (ax == sx && ay == sy) {
+                    overlap = true;
+                    break;
+                }
+            }
+ 
+            // Tile must be empty
+            if (!overlap && level.tiles[ax][ay] == 0) {
+                // Add an apple at the tile position
+                level.tiles[ax][ay] = 2;
+                valid = true;
+            }
+        }
+    }
+
+  function updateGame(dt) {
+        // Move the snake
+        if (snake.tryMove(dt)) {
+            // Check snake collisions
+ 
+            // Get the coordinates of the next move
+            var nextmove = snake.nextMove();
+            var nx = nextmove.x;
+            var ny = nextmove.y;
+ 
+            if (nx >= 0 && nx < level.columns && ny >= 0 && ny < level.rows) {
+                if (level.tiles[nx][ny] == 1) {
+                    // Collision with a wall
+                    gameover = true;
+                }
+ 
+                // Collisions with the snake itself
+                for (var i=0; i<snake.segments.length; i++) {
+                    var sx = snake.segments[i].x;
+                    var sy = snake.segments[i].y;
+ 
+                    if (nx == sx && ny == sy) {
+                        // Found a snake part
+                        gameover = true;
+                        break;
+                    }
+                }
+ 
+                if (!gameover) {
+                    // The snake is allowed to move
+ 
+                    // Move the snake
+                    snake.move();
+ 
+                    // Check collision with an apple
+                    if (level.tiles[nx][ny] == 2) {
+                        // Remove the apple
+                        level.tiles[nx][ny] = 0;
+ 
+                        // Add a new apple
+                        addApple();
+ 
+                        // Grow the snake
+                        snake.grow();
+ 
+                        // Add a point to the score
+                        score++;
+                    }
+                }
+            } else {
+                // Out of bounds
+                gameover = true;
+            }
+ 
+            if (gameover) {
+                gameovertime = 0;
+            }
+        }
+    }
